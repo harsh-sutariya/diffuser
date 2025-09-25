@@ -129,10 +129,19 @@ class GaussianNormalizer(Normalizer):
         normalizes to zero mean and unit variance
     '''
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, eps=1e-8, **kwargs):
         super().__init__(*args, **kwargs)
         self.means = self.X.mean(axis=0)
         self.stds = self.X.std(axis=0)
+        
+        # Protect against zero standard deviation (constant features)
+        zero_std_mask = self.stds < eps
+        if zero_std_mask.any():
+            zero_indices = np.where(zero_std_mask)[0]
+            print(f'[ utils/normalization ] Warning: Found {zero_std_mask.sum()} constant features at indices {zero_indices}')
+            print(f'[ utils/normalization ] Setting std to {eps} for these features to avoid division by zero')
+            self.stds[zero_std_mask] = eps
+        
         self.z = 1
 
     def __repr__(self):
