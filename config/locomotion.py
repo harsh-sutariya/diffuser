@@ -61,6 +61,11 @@ base = {
         'bucket': None,
         'device': 'cuda',
         'seed': None,
+        
+        ## wandb logging
+        'use_wandb': True,
+        'wandb_project': 'diffuser-locomotion',
+        'wandb_detailed_logging': True,  # Enable detailed metrics (gradients, memory, etc.)
     },
 
     'values': {
